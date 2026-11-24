@@ -1,0 +1,22 @@
+# Застосунок у контейнерах (практичне завдання № 6): docker compose up --build → http://localhost:8080
+# Секрети – у файлі .env (скопіюйте .env.example), не в цьому файлі і не в репозиторії.
+services:
+  api:
+    build: { context: ., target: api, args: { APP: "${APP:-app}" } }
+    environment:
+      JWT_SECRET: ${JWT_SECRET:?задайте JWT_SECRET у файлі .env}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?задайте ADMIN_PASSWORD у файлі .env}
+      CORS_ORIGIN: http://localhost:8080
+    volumes:
+      - db:/data                       # база SQLite зберігається між перезапусками контейнера
+    restart: unless-stopped
+  web:
+    build: { context: ., target: web, args: { APP: "${APP:-app}" } }
+    ports:
+      - "8080:80"
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+volumes:
+  db: {}

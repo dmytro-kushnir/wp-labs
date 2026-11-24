@@ -1,0 +1,12 @@
+node_modules
+**/node_modules
+**/dist
+.git
+.github
+.idea
+.vscode
+.env
+*.db
+*.db-shm
+*.db-wal
+*.log

@@ -1,0 +1,5 @@
+{
+  "name": "item",
+  "title": "Сформуйте командою: node tools/variant.mjs ПРІЗВИЩЕ --number N --write",
+  "fields": {}
+}

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Каталог бібліотеки – демонстраційний застосунок курсу «Веб-програмування»">
+  <title>Бібліотека – каталог</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="src/ui/main.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Бібліотека</h1>
+      <p id="summary" class="summary"></p>
+    </div>
+    <div class="header-actions">
+      <span id="user-label" class="summary"></span>
+      <button id="login-btn" type="button" hidden>Увійти</button>
+      <button id="add-btn" type="button" class="primary">Додати книгу</button>
+    </div>
+  </header>
+
+  <main>
+    <form id="filters" class="toolbar" role="search" aria-label="Пошук і фільтри">
+      <label>Пошук
+        <input type="search" name="q" placeholder="Назва або автор" autocomplete="off">
+      </label>
+      <label>Жанр
+        <select name="genre"><option value="">Усі жанри</option></select>
+      </label>
+      <label>Сортування
+        <select name="sort">
+          <option value="title:asc">Назва: А–Я</option>
+          <option value="title:desc">Назва: Я–А</option>
+          <option value="year:desc">Спершу нові</option>
+          <option value="year:asc">Спершу старі</option>
+          <option value="price:asc">Спершу дешевші</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" name="available"> Лише доступні</label>
+    </form>
+
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+    <ul id="list" class="cards" aria-label="Книги"></ul>
+
+    <nav class="pager" aria-label="Сторінки каталогу">
+      <button type="button" data-page="prev">← Попередня</button>
+      <span id="page-info"></span>
+      <button type="button" data-page="next">Наступна →</button>
+    </nav>
+  </main>
+
+  <dialog id="editor" aria-labelledby="editor-title">
+    <form id="book-form" novalidate>
+      <h2 id="editor-title">Нова книга</h2>
+      <label>Назва
+        <input name="title" required maxlength="200" aria-describedby="err-title">
+        <span class="error" id="err-title"></span>
+      </label>
+      <label>Автор
+        <input name="author" required maxlength="100" aria-describedby="err-author">
+        <span class="error" id="err-author"></span>
+      </label>
+      <div class="row">
+        <label>Рік видання
+          <input name="year" type="number" required min="1450" step="1" aria-describedby="err-year">
+          <span class="error" id="err-year"></span>
+        </label>
+        <label>Вартість, грн
+          <input name="price" type="number" required min="0" step="0.01" aria-describedby="err-price">
+          <span class="error" id="err-price"></span>
+        </label>
+      </div>
+      <label>ISBN-13
+        <input name="isbn" required inputmode="numeric" pattern="97[89][0-9]{10}" placeholder="9789660370906" aria-describedby="err-isbn">
+        <span class="error" id="err-isbn"></span>
+      </label>
+      <div class="row">
+        <label>Жанр
+          <select name="genre" required aria-describedby="err-genre"><option value="">Оберіть жанр</option></select>
+          <span class="error" id="err-genre"></span>
+        </label>
+        <label>Дата надходження
+          <input name="receivedAt" type="date" required aria-describedby="err-receivedAt">
+          <span class="error" id="err-receivedAt"></span>
+        </label>
+      </div>
+      <label class="check"><input type="checkbox" name="available" checked> Доступна для видачі</label>
+      <p class="error" id="err-form" role="alert"></p>
+      <div class="actions">
+        <button type="button" data-action="cancel">Скасувати</button>
+        <button type="submit" class="primary">Зберегти</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="login-dialog" aria-labelledby="login-title">
+    <form id="login-form" novalidate>
+      <h2 id="login-title">Вхід</h2>
+      <label>Електронна пошта
+        <input name="email" type="email" required autocomplete="username">
+      </label>
+      <label>Пароль
+        <input name="password" type="password" required minlength="8" autocomplete="current-password">
+      </label>
+      <p class="error" id="err-login" role="alert"></p>
+      <div class="actions">
+        <button type="button" data-action="cancel">Скасувати</button>
+        <button type="submit" class="primary">Увійти</button>
+      </div>
+    </form>
+  </dialog>
+
+  <template id="card-tpl">
+    <li class="card">
+      <h2 class="card-title"></h2>
+      <p class="card-author"></p>
+      <p class="card-meta"></p>
+      <p class="card-price"></p>
+      <div class="card-actions">
+        <button type="button" data-action="toggle"></button>
+        <button type="button" data-action="edit">Редагувати</button>
+        <button type="button" data-action="delete" class="danger">Видалити</button>
+      </div>
+    </li>
+  </template>
+</body>
+</html>

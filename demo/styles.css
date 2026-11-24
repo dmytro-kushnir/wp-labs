@@ -1,0 +1,63 @@
+:root {
+  --ink: #1f2933;
+  --muted: #5f6b76;
+  --line: #d5dbe1;
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --accent: #1f5f8b;
+  --accent-ink: #ffffff;
+  --danger: #b23b2e;
+  --ok: #2a7d5c;
+  --radius: 10px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 1100px; margin: 0 auto; padding: 0 1rem 2rem; }
+
+.app-header {
+  max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 1rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+h1 { margin: 0; font-size: 1.8rem; }
+.summary { margin: .25rem 0 0; color: var(--muted); }
+.header-actions { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; justify-content: flex-end; }
+
+button {
+  font: inherit; padding: .5rem .9rem; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+}
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+button.danger { color: var(--danger); }
+button:disabled { opacity: .5; cursor: default; }
+:focus-visible { outline: 3px solid #f0b429; outline-offset: 2px; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin-bottom: 1rem; }
+label { display: flex; flex-direction: column; gap: .3rem; font-size: .9rem; color: var(--muted); }
+label.check { flex-direction: row; align-items: center; gap: .4rem; }
+input, select { font: inherit; padding: .45rem .6rem; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: #fff; }
+input[aria-invalid="true"], select[aria-invalid="true"] { border-color: var(--danger); }
+
+.status { min-height: 1.5rem; margin-bottom: .5rem; color: var(--muted); }
+.status.error { color: var(--danger); }
+
+.cards { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; display: flex; flex-direction: column; gap: .35rem; }
+.card-title { margin: 0; font-size: 1.1rem; }
+.card-author, .card-meta { margin: 0; color: var(--muted); }
+.card-price { margin: 0; font-weight: 600; }
+.card-actions { margin-top: auto; padding-top: .5rem; display: flex; flex-wrap: wrap; gap: .4rem; }
+.card[data-available="false"] .card-title::after { content: " · видана"; color: var(--danger); font-size: .85rem; font-weight: 400; }
+
+.pager { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1.5rem; }
+
+dialog { border: none; border-radius: var(--radius); padding: 1.5rem; width: min(520px, 94vw); }
+dialog::backdrop { background: rgb(15 23 42 / .45); }
+dialog form { display: flex; flex-direction: column; gap: .8rem; }
+dialog h2 { margin: 0 0 .25rem; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+.error { color: var(--danger); font-size: .85rem; min-height: 1em; margin: 0; }
+.actions { display: flex; justify-content: flex-end; gap: .5rem; }

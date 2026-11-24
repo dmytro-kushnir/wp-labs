@@ -1,0 +1,678 @@
+{
+  "info": {
+    "name": "WP Catalog API – контрактні тести",
+    "description": "Перевірка відповідності сервера контракту contract/openapi.yaml. Дані запитів – fixtures.json варіанту студента.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "itemId",
+      "value": ""
+    },
+    {
+      "key": "authHeader",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 GET /api/health",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// ПЗ 5 (--auth): вхід адміністратора; токен передається в заголовку Authorization усіх запитів зміни",
+              "pm.collectionVariables.set('authHeader', '');",
+              "if (pm.environment.get('auth') === '1') {",
+              "  pm.sendRequest({ url: pm.environment.get('baseUrl') + '/api/auth/login', method: 'POST', header: { 'Content-Type': 'application/json' },",
+              "    body: { mode: 'raw', raw: JSON.stringify({ email: pm.environment.get('adminEmail'), password: pm.environment.get('adminPassword') }) } },",
+              "    (err, res) => { if (!err && res.code === 200) pm.collectionVariables.set('authHeader', 'Bearer ' + res.json().token); });",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.environment.get('auth') === '1') pm.test('вхід адміністратора виконано', () => pm.expect(pm.collectionVariables.get('authHeader')).to.match(/^Bearer /));",
+              "pm.test('200 і status: ok', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().status).to.eql('ok'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/health"
+      }
+    },
+    {
+      "name": "02 GET /api/items – сторінка списку",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200 і структура ItemPage', () => {",
+              "  pm.response.to.have.status(200);",
+              "  const page = pm.response.json();",
+              "  pm.expect(page.items).to.be.an('array');",
+              "  pm.expect(page.items.length).to.be.at.most(5);",
+              "  for (const key of ['total', 'page', 'limit']) pm.expect(page[key], key).to.be.a('number');",
+              "  for (const item of page.items) pm.expect(item).to.include.keys('id', 'title', 'createdAt', 'updatedAt');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/items?limit=5"
+      }
+    },
+    {
+      "name": "03 POST /api/items – коректний запис",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('body', JSON.stringify(pm.iterationData.toObject().valid));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201, Location і id', () => {",
+              "  pm.response.to.have.status(201);",
+              "  const item = pm.response.json();",
+              "  pm.expect(item.id).to.be.a('number');",
+              "  pm.expect(item.title).to.eql(pm.iterationData.get('valid').title.trim());",
+              "  pm.expect(pm.response.headers.get('Location')).to.eql(`/api/items/${item.id}`);",
+              "  pm.collectionVariables.set('itemId', item.id);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{authHeader}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{body}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/items"
+      }
+    },
+    {
+      "name": "04 GET /api/items/:id – створений запис",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200 і ті самі дані', () => {",
+              "  pm.response.to.have.status(200);",
+              "  const item = pm.response.json();",
+              "  pm.expect(item.id).to.eql(Number(pm.collectionVariables.get('itemId')));",
+              "  for (const [k, v] of Object.entries(pm.iterationData.get('valid'))) if (typeof v !== 'string') pm.expect(item[k], k).to.eql(v);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/items/{{itemId}}"
+      }
+    },
+    {
+      "name": "05 GET /api/items – фільтр за полем",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const { field, value } = pm.iterationData.toObject().filter;",
+              "pm.variables.set('filterField', field);",
+              "pm.variables.set('filterValue', String(value));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200 і всі записи відповідають фільтру', () => {",
+              "  pm.response.to.have.status(200);",
+              "  const { field, value } = pm.iterationData.get('filter');",
+              "  const page = pm.response.json();",
+              "  pm.expect(page.total).to.be.above(0);",
+              "  for (const item of page.items) pm.expect(item[field], field).to.eql(value);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/items?{{filterField}}={{filterValue}}&limit=100"
+      }
+    },
+    {
+      "name": "06 POST /api/items – невалідні дані",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('body', JSON.stringify(pm.iterationData.toObject().invalid.body));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('400 VALIDATION_ERROR з помилками по полях', () => {",
+              "  pm.response.to.have.status(400);",
+              "  const { error } = pm.response.json();",
+              "  pm.expect(error.code).to.eql('VALIDATION_ERROR');",
+              "  const fields = error.details.map((d) => d.field);",
+              "  for (const f of pm.iterationData.get('invalid').fields) pm.expect(fields, `details містить ${f}`).to.include(f);",
+              "  for (const d of error.details) pm.expect(d.message).to.be.a('string').and.not.empty;",
+              "});",
+              "pm.test('тіло помилки за контрактом', () => {",
+              "  const { error } = pm.response.json();",
+              "  pm.expect(error.code).to.be.a('string');",
+              "  pm.expect(error.message).to.be.a('string');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{authHeader}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{body}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/items"
+      }
+    },
+    {
+      "name": "07 PUT /api/items/:id – заміна запису",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('body', JSON.stringify(pm.iterationData.toObject().update));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200 і нові значення', () => {",
+              "  pm.response.to.have.status(200);",
+              "  const item = pm.response.json();",
+              "  for (const [k, v] of Object.entries(pm.iterationData.get('update'))) if (typeof v !== 'string') pm.expect(item[k], k).to.eql(v);",
+              "  pm.expect(new Date(item.updatedAt) >= new Date(item.createdAt)).to.be.true;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{authHeader}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{body}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/items/{{itemId}}"
+      }
+    },
+    {
+      "name": "08 GET /api/items/:id – неіснуючий запис",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('404 NOT_FOUND', () => { pm.response.to.have.status(404); pm.expect(pm.response.json().error.code).to.eql('NOT_FOUND'); });",
+              "pm.test('тіло помилки за контрактом', () => {",
+              "  const { error } = pm.response.json();",
+              "  pm.expect(error.code).to.be.a('string');",
+              "  pm.expect(error.message).to.be.a('string');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/items/999999"
+      }
+    },
+    {
+      "name": "09 GET /api/items – неправильні параметри",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('400 для limit=0', () => pm.response.to.have.status(400));",
+              "pm.test('тіло помилки за контрактом', () => {",
+              "  const { error } = pm.response.json();",
+              "  pm.expect(error.code).to.be.a('string');",
+              "  pm.expect(error.message).to.be.a('string');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/items?limit=0"
+      }
+    },
+    {
+      "name": "10 POST /api/items – тіло не є JSON",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('400', () => pm.response.to.have.status(400));",
+              "pm.test('тіло помилки за контрактом', () => {",
+              "  const { error } = pm.response.json();",
+              "  pm.expect(error.code).to.be.a('string');",
+              "  pm.expect(error.message).to.be.a('string');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{authHeader}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{oops"
+        },
+        "url": "{{baseUrl}}/api/items"
+      }
+    },
+    {
+      "name": "11 Індивідуальне правило – підготовчі записи",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('body', JSON.stringify(pm.iterationData.toObject().rule.setup[0]));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('підготовчий запис створено (201)', () => pm.response.to.have.status(201));",
+              "// решту підготовчих записів (правило № 8 потребує трьох) надсилаємо з тестового скрипту",
+              "for (const body of pm.iterationData.get('rule').setup.slice(1)) {",
+              "  pm.sendRequest({ url: pm.environment.get('baseUrl') + '/api/items', method: 'POST',",
+              "    header: { 'Content-Type': 'application/json' }, body: { mode: 'raw', raw: JSON.stringify(body) } },",
+              "    (err, res) => pm.test(`підготовчий запис «${body.title}» (201)`, () => pm.expect(res.code).to.eql(201)));",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{authHeader}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{body}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/items"
+      }
+    },
+    {
+      "name": "12 Індивідуальне правило – перевірка",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('body', JSON.stringify(pm.iterationData.toObject().rule.violation));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const rule = pm.iterationData.get('rule');",
+              "if (pm.environment.get('skipRule') === '1') {",
+              "  pm.test('правило не перевіряється (mock-сервер)', () => true);",
+              "} else {",
+              "  pm.test(`${rule.description}: статус ${rule.status}`, () => pm.response.to.have.status(rule.status));",
+              "  if (rule.expect) pm.test('значення після нормалізації', () => {",
+              "    for (const [k, v] of Object.entries(rule.expect)) pm.expect(pm.response.json()[k], k).to.eql(v);",
+              "  });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{authHeader}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{body}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/items"
+      }
+    },
+    {
+      "name": "13 Безпека: зміна без токена",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('body', JSON.stringify(pm.iterationData.toObject().valid));",
+              "pm.request.headers.remove('Authorization');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.environment.get('auth') !== '1') { pm.test('автентифікація не перевіряється (ПЗ 4)', () => true); } else {",
+              "  pm.test('401 і WWW-Authenticate: Bearer', () => { pm.response.to.have.status(401); pm.expect(pm.response.headers.get('WWW-Authenticate')).to.eql('Bearer'); });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{authHeader}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{body}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/items"
+      }
+    },
+    {
+      "name": "14 Безпека: хибний пароль",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('badLogin', JSON.stringify({ email: pm.environment.get('adminEmail') || 'admin@example.com', password: 'wrong-password-123' }));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.environment.get('auth') !== '1') { pm.test('автентифікація не перевіряється (ПЗ 4)', () => true); } else {",
+              "  pm.test('401 без підказки, що саме неправильне', () => pm.response.to.have.status(401));",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{authHeader}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{badLogin}}"
+        },
+        "url": "{{baseUrl}}/api/auth/login"
+      }
+    },
+    {
+      "name": "15 Безпека: користувач не може видалити запис",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// реєстрація і вхід звичайного користувача; запит виконується з його токеном",
+              "if (pm.environment.get('auth') === '1') {",
+              "  const credentials = { email: `user${Date.now()}@example.com`, password: 'user-password-123' };",
+              "  const post = (path, body, cb) => pm.sendRequest({ url: pm.environment.get('baseUrl') + path, method: 'POST',",
+              "    header: { 'Content-Type': 'application/json' }, body: { mode: 'raw', raw: JSON.stringify(body) } }, cb);",
+              "  post('/api/auth/register', credentials, () => post('/api/auth/login', credentials, (err, res) => {",
+              "    pm.request.headers.upsert({ key: 'Authorization', value: 'Bearer ' + (res && res.code === 200 ? res.json().token : '') });",
+              "  }));",
+              "} else {",
+              "  pm.request.url = pm.environment.get('baseUrl') + '/api/health';",
+              "  pm.request.method = 'GET';",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.environment.get('auth') !== '1') { pm.test('автентифікація не перевіряється (ПЗ 4)', () => true); } else {",
+              "  pm.test('403 FORBIDDEN', () => { pm.response.to.have.status(403); pm.expect(pm.response.json().error.code).to.eql('FORBIDDEN'); });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{authHeader}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/items/{{itemId}}"
+      }
+    },
+    {
+      "name": "16 DELETE /api/items/:id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('204 без тіла', () => { pm.response.to.have.status(204); pm.expect(pm.response.text()).to.eql(''); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{authHeader}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/items/{{itemId}}"
+      }
+    },
+    {
+      "name": "17 GET /api/items/:id – видалений запис",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('404 після видалення', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/items/{{itemId}}"
+      }
+    }
+  ]
+}

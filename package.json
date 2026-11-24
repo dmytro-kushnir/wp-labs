@@ -1,0 +1,58 @@
+{
+  "name": "wp-labs",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Практичні завдання курсу «Веб-програмування»: застосунок студента (app/), зразок «Бібліотека» (demo/), інструменти (tools/)",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "variant": "node tools/variant.mjs",
+    "test": "node tools/check-node.mjs && node --test \"app/**/*.test.js\" \"app/**/*.test.ts\"",
+    "dev": "node tools/serve.mjs --root app --port 5180",
+    "mock": "node tools/mock-server.mjs --entity app/entity.json --data app/data/items.json --port 3000",
+    "typecheck": "tsc -p app/jsconfig.json && tsc -p app/server/tsconfig.json && tsc -p app/client/tsconfig.json",
+    "server": "node app/server/src/server.ts",
+    "contract": "node tools/contract.mjs",
+    "client": "vite --config app/client/vite.config.ts",
+    "build": "vite build --config app/client/vite.config.ts",
+    "demo:test": "node tools/check-node.mjs && node --test \"demo/**/*.test.js\"",
+    "demo:dev": "node tools/serve.mjs --root demo --port 5181",
+    "demo:mock": "node tools/mock-server.mjs --entity demo/entity.json --data demo/data/items.json --port 3001",
+    "demo:typecheck": "tsc -p demo/jsconfig.json",
+    "demo:server": "node demo/server/src/server.ts",
+    "demo:server:test": "node --test \"demo/server/tests/*.test.ts\"",
+    "demo:server:typecheck": "tsc -p demo/server/tsconfig.json",
+    "demo:contract": "node tools/contract.mjs --server demo/server/src/server.ts --fixtures demo/fixtures.json --auth",
+    "demo:xss": "node tools/serve.mjs --root demo --port 5182 --no-csp",
+    "demo:xss:csp": "node tools/serve.mjs --root demo --port 5183",
+    "demo:client": "vite --config demo/client/vite.config.ts",
+    "demo:build": "vite build --config demo/client/vite.config.ts",
+    "demo:client:typecheck": "tsc -p demo/client/tsconfig.json",
+    "tools:test": "node --test \"tests/**/*.test.mjs\"",
+    "check": "npm run tools:test && npm run demo:test && npm run demo:typecheck && npm run demo:server:test && npm run demo:server:typecheck && npm run demo:client:typecheck && npm run demo:build && npm run demo:contract && npm test && npm run typecheck && npm run build"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@vitejs/plugin-react": "^6.3.0",
+    "newman": "^6.2.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router": "^8.5.2",
+    "typescript": "^5.9.0",
+    "vite": "^8.3.8"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "jose": "^6.2.18",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  }
+}

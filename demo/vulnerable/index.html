@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Відгуки читачів – навчальна сторінка з вразливістю XSS</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../styles.css">
+  <script type="module" src="vulnerable.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Відгуки читачів</h1>
+      <p id="greeting" class="summary"></p>
+    </div>
+  </header>
+  <main>
+    <p class="status error">Навчальна сторінка ПЗ 5: код містить вразливості XSS навмисно. Не використовуйте його як зразок.</p>
+    <form id="review-form" class="toolbar">
+      <label>Ім’я <input name="name" required></label>
+      <label>Відгук <input name="text" required size="50"></label>
+      <button type="submit" class="primary">Надіслати</button>
+      <button type="button" id="clear-btn">Очистити відгуки</button>
+    </form>
+    <ul id="reviews" class="cards"></ul>
+  </main>
+</body>
+</html>

@@ -1,0 +1,11 @@
+/* Доповнення стилів ПЗ 2 для клієнта React */
+.app-header h1 a { color: inherit; text-decoration: none; }
+a.button { display: inline-block; font: inherit; padding: .5rem .9rem; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--card); color: var(--ink); text-decoration: none; }
+a.button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.card-title a { color: inherit; }
+.form { display: flex; flex-direction: column; gap: .8rem; max-width: 560px; }
+.form.narrow { max-width: 380px; }
+.details dl { display: grid; grid-template-columns: max-content 1fr; gap: .3rem 1rem; margin: 0; }
+.details dt { color: var(--muted); }
+.details dd { margin: 0; }

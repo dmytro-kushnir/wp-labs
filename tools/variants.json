@@ -1,0 +1,1622 @@
+[
+ {
+  "n": 1,
+  "domain": "Кінотеатр",
+  "entity": "Сеанс",
+  "name": "session",
+  "titleLabel": "Фільм",
+  "fields": {
+   "hall": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Зала"
+   },
+   "price": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 50,
+    "max": 2000,
+    "label": "Ціна квитка, грн"
+   },
+   "showDate": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата показу"
+   },
+   "format": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "2d",
+     "3d",
+     "imax"
+    ],
+    "labels": {
+     "2d": "2D",
+     "3d": "3D",
+     "imax": "IMAX"
+    },
+    "label": "Формат"
+   },
+   "subtitles": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Із субтитрами"
+   }
+  }
+ },
+ {
+  "n": 2,
+  "domain": "Автосервіс",
+  "entity": "Замовлення",
+  "name": "order",
+  "titleLabel": "Послуга",
+  "fields": {
+   "car": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Автомобіль"
+   },
+   "cost": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 0,
+    "max": 500000,
+    "label": "Вартість, грн"
+   },
+   "visitDate": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата запису"
+   },
+   "status": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "new",
+     "progress",
+     "done"
+    ],
+    "labels": {
+     "new": "Нове",
+     "progress": "У роботі",
+     "done": "Виконане"
+    },
+    "label": "Стан"
+   },
+   "warranty": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Гарантійний випадок"
+   }
+  }
+ },
+ {
+  "n": 3,
+  "domain": "Спортзал",
+  "entity": "Тренування",
+  "name": "workout",
+  "titleLabel": "Назва тренування",
+  "fields": {
+   "coach": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Тренер"
+   },
+   "places": {
+    "role": "number",
+    "type": "integer",
+    "required": true,
+    "min": 1,
+    "max": 50,
+    "label": "Кількість місць"
+   },
+   "workoutDate": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата"
+   },
+   "level": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "beginner",
+     "middle",
+     "advanced"
+    ],
+    "labels": {
+     "beginner": "Початковий",
+     "middle": "Середній",
+     "advanced": "Високий"
+    },
+    "label": "Рівень"
+   },
+   "online": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Онлайн"
+   }
+  }
+ },
+ {
+  "n": 4,
+  "domain": "Ветеринарна клініка",
+  "entity": "Прийом",
+  "name": "visit",
+  "titleLabel": "Кличка тварини",
+  "fields": {
+   "doctor": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Лікар"
+   },
+   "weight": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 0.1,
+    "max": 200,
+    "label": "Вага тварини, кг"
+   },
+   "visitDate": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата прийому"
+   },
+   "species": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "cat",
+     "dog",
+     "bird",
+     "other"
+    ],
+    "labels": {
+     "cat": "Кіт",
+     "dog": "Собака",
+     "bird": "Птах",
+     "other": "Інше"
+    },
+    "label": "Вид"
+   },
+   "vaccinated": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Щеплена"
+   }
+  }
+ },
+ {
+  "n": 5,
+  "domain": "Готель",
+  "entity": "Номер",
+  "name": "room",
+  "titleLabel": "Назва номера",
+  "fields": {
+   "view": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Вид з вікна"
+   },
+   "price": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 300,
+    "max": 50000,
+    "label": "Ціна за ніч, грн"
+   },
+   "availableFrom": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Вільний з"
+   },
+   "roomType": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "single",
+     "double",
+     "suite"
+    ],
+    "labels": {
+     "single": "Одномісний",
+     "double": "Двомісний",
+     "suite": "Люкс"
+    },
+    "label": "Тип"
+   },
+   "breakfast": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Сніданок включено"
+   }
+  }
+ },
+ {
+  "n": 6,
+  "domain": "Музей",
+  "entity": "Експонат",
+  "name": "exhibit",
+  "titleLabel": "Назва експоната",
+  "fields": {
+   "author": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Автор або майстер"
+   },
+   "insurance": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 0,
+    "max": 100000000,
+    "label": "Страхова вартість, грн"
+   },
+   "acquiredAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата надходження"
+   },
+   "hall": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "archaeology",
+     "art",
+     "history",
+     "nature"
+    ],
+    "labels": {
+     "archaeology": "Археологія",
+     "art": "Мистецтво",
+     "history": "Історія",
+     "nature": "Природа"
+    },
+    "label": "Зала"
+   },
+   "onDisplay": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "В експозиції"
+   }
+  }
+ },
+ {
+  "n": 7,
+  "domain": "Аптека",
+  "entity": "Препарат",
+  "name": "drug",
+  "titleLabel": "Назва препарату",
+  "fields": {
+   "manufacturer": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Виробник"
+   },
+   "price": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 1,
+    "max": 20000,
+    "label": "Ціна, грн"
+   },
+   "expiresAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Придатний до"
+   },
+   "form": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "tablet",
+     "syrup",
+     "ointment",
+     "injection"
+    ],
+    "labels": {
+     "tablet": "Таблетки",
+     "syrup": "Сироп",
+     "ointment": "Мазь",
+     "injection": "Ін’єкції"
+    },
+    "label": "Форма випуску"
+   },
+   "prescription": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "За рецептом"
+   }
+  }
+ },
+ {
+  "n": 8,
+  "domain": "Автосалон",
+  "entity": "Автомобіль",
+  "name": "car",
+  "titleLabel": "Модель",
+  "fields": {
+   "brand": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Марка"
+   },
+   "price": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 10000,
+    "max": 20000000,
+    "label": "Ціна, грн"
+   },
+   "arrivalDate": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата надходження"
+   },
+   "fuel": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "petrol",
+     "diesel",
+     "electric",
+     "hybrid"
+    ],
+    "labels": {
+     "petrol": "Бензин",
+     "diesel": "Дизель",
+     "electric": "Електро",
+     "hybrid": "Гібрид"
+    },
+    "label": "Пальне"
+   },
+   "used": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Вживаний"
+   }
+  }
+ },
+ {
+  "n": 9,
+  "domain": "Туристична агенція",
+  "entity": "Тур",
+  "name": "tour",
+  "titleLabel": "Назва туру",
+  "fields": {
+   "country": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Країна"
+   },
+   "price": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 1000,
+    "max": 1000000,
+    "label": "Ціна, грн"
+   },
+   "startDate": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата початку"
+   },
+   "transport": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "plane",
+     "bus",
+     "train"
+    ],
+    "labels": {
+     "plane": "Літак",
+     "bus": "Автобус",
+     "train": "Потяг"
+    },
+    "label": "Транспорт"
+   },
+   "allInclusive": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Усе включено"
+   }
+  }
+ },
+ {
+  "n": 10,
+  "domain": "Ресторан",
+  "entity": "Страва",
+  "name": "dish",
+  "titleLabel": "Назва страви",
+  "fields": {
+   "ingredient": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Основний інгредієнт"
+   },
+   "price": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 10,
+    "max": 10000,
+    "label": "Ціна, грн"
+   },
+   "inMenuSince": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "У меню з"
+   },
+   "category": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "starter",
+     "main",
+     "dessert",
+     "drink"
+    ],
+    "labels": {
+     "starter": "Закуска",
+     "main": "Основна",
+     "dessert": "Десерт",
+     "drink": "Напій"
+    },
+    "label": "Категорія"
+   },
+   "vegetarian": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Вегетаріанська"
+   }
+  }
+ },
+ {
+  "n": 11,
+  "domain": "Сервісний центр",
+  "entity": "Заявка на ремонт",
+  "name": "repair",
+  "titleLabel": "Пристрій",
+  "fields": {
+   "client": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Клієнт"
+   },
+   "cost": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 0,
+    "max": 200000,
+    "label": "Вартість ремонту, грн"
+   },
+   "receivedAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата прийому"
+   },
+   "priority": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "low",
+     "normal",
+     "high"
+    ],
+    "labels": {
+     "low": "Низький",
+     "normal": "Звичайний",
+     "high": "Високий"
+    },
+    "label": "Пріоритет"
+   },
+   "warranty": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Гарантійний ремонт"
+   }
+  }
+ },
+ {
+  "n": 12,
+  "domain": "Афіша міста",
+  "entity": "Подія",
+  "name": "event",
+  "titleLabel": "Назва події",
+  "fields": {
+   "venue": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Місце проведення"
+   },
+   "capacity": {
+    "role": "number",
+    "type": "integer",
+    "required": true,
+    "min": 1,
+    "max": 100000,
+    "label": "Кількість місць"
+   },
+   "eventDate": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата"
+   },
+   "eventType": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "concert",
+     "theatre",
+     "exhibition",
+     "festival"
+    ],
+    "labels": {
+     "concert": "Концерт",
+     "theatre": "Вистава",
+     "exhibition": "Виставка",
+     "festival": "Фестиваль"
+    },
+    "label": "Тип"
+   },
+   "free": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Вхід вільний"
+   }
+  }
+ },
+ {
+  "n": 13,
+  "domain": "Навчальний центр",
+  "entity": "Курс",
+  "name": "course",
+  "titleLabel": "Назва курсу",
+  "fields": {
+   "teacher": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Викладач"
+   },
+   "hours": {
+    "role": "number",
+    "type": "integer",
+    "required": true,
+    "min": 1,
+    "max": 500,
+    "label": "Тривалість, год"
+   },
+   "startDate": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата початку"
+   },
+   "format": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "online",
+     "offline",
+     "hybrid"
+    ],
+    "labels": {
+     "online": "Онлайн",
+     "offline": "Очно",
+     "hybrid": "Змішаний"
+    },
+    "label": "Формат"
+   },
+   "certificate": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Видається сертифікат"
+   }
+  }
+ },
+ {
+  "n": 14,
+  "domain": "Агенція нерухомості",
+  "entity": "Оголошення",
+  "name": "listing",
+  "titleLabel": "Заголовок оголошення",
+  "fields": {
+   "district": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Район"
+   },
+   "area": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 10,
+    "max": 2000,
+    "label": "Площа, м²"
+   },
+   "publishedAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата публікації"
+   },
+   "deal": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "sale",
+     "rent",
+     "daily"
+    ],
+    "labels": {
+     "sale": "Продаж",
+     "rent": "Оренда",
+     "daily": "Подобово"
+    },
+    "label": "Тип угоди"
+   },
+   "furnished": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "З меблями"
+   }
+  }
+ },
+ {
+  "n": 15,
+  "domain": "Кадрова агенція",
+  "entity": "Вакансія",
+  "name": "vacancy",
+  "titleLabel": "Посада",
+  "fields": {
+   "company": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Компанія"
+   },
+   "salary": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 8000,
+    "max": 1000000,
+    "label": "Зарплата, грн"
+   },
+   "publishedAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата публікації"
+   },
+   "employment": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "full",
+     "part",
+     "project"
+    ],
+    "labels": {
+     "full": "Повна",
+     "part": "Часткова",
+     "project": "Проєктна"
+    },
+    "label": "Зайнятість"
+   },
+   "remote": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Віддалено"
+   }
+  }
+ },
+ {
+  "n": 16,
+  "domain": "Прокат автомобілів",
+  "entity": "Автомобіль для прокату",
+  "name": "rental",
+  "titleLabel": "Модель",
+  "fields": {
+   "color": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Колір"
+   },
+   "pricePerDay": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 300,
+    "max": 50000,
+    "label": "Ціна за добу, грн"
+   },
+   "availableFrom": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Доступний з"
+   },
+   "carClass": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "economy",
+     "comfort",
+     "business"
+    ],
+    "labels": {
+     "economy": "Економ",
+     "comfort": "Комфорт",
+     "business": "Бізнес"
+    },
+    "label": "Клас"
+   },
+   "automatic": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Автоматична коробка"
+   }
+  }
+ },
+ {
+  "n": 17,
+  "domain": "Склад",
+  "entity": "Товар",
+  "name": "product",
+  "titleLabel": "Назва товару",
+  "fields": {
+   "supplier": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Постачальник"
+   },
+   "quantity": {
+    "role": "number",
+    "type": "integer",
+    "required": true,
+    "min": 0,
+    "max": 1000000,
+    "label": "Кількість"
+   },
+   "receivedAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата надходження"
+   },
+   "unit": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "pcs",
+     "kg",
+     "l",
+     "m"
+    ],
+    "labels": {
+     "pcs": "шт.",
+     "kg": "кг",
+     "l": "л",
+     "m": "м"
+    },
+    "label": "Одиниця виміру"
+   },
+   "fragile": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Крихкий"
+   }
+  }
+ },
+ {
+  "n": 18,
+  "domain": "Зоопарк",
+  "entity": "Тварина",
+  "name": "animal",
+  "titleLabel": "Кличка",
+  "fields": {
+   "species": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Вид"
+   },
+   "age": {
+    "role": "number",
+    "type": "integer",
+    "required": true,
+    "min": 0,
+    "max": 150,
+    "label": "Вік, років"
+   },
+   "arrivedAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата прибуття"
+   },
+   "diet": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "herbivore",
+     "carnivore",
+     "omnivore"
+    ],
+    "labels": {
+     "herbivore": "Травоїдна",
+     "carnivore": "М’ясоїдна",
+     "omnivore": "Всеїдна"
+    },
+    "label": "Харчування"
+   },
+   "endangered": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Під загрозою зникнення"
+   }
+  }
+ },
+ {
+  "n": 19,
+  "domain": "Квіткова крамниця",
+  "entity": "Букет",
+  "name": "bouquet",
+  "titleLabel": "Назва букета",
+  "fields": {
+   "mainFlower": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Основна квітка"
+   },
+   "price": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 100,
+    "max": 50000,
+    "label": "Ціна, грн"
+   },
+   "madeAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата складання"
+   },
+   "occasion": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "birthday",
+     "wedding",
+     "holiday",
+     "other"
+    ],
+    "labels": {
+     "birthday": "День народження",
+     "wedding": "Весілля",
+     "holiday": "Свято",
+     "other": "Інше"
+    },
+    "label": "Привід"
+   },
+   "delivery": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "З доставкою"
+   }
+  }
+ },
+ {
+  "n": 20,
+  "domain": "Кав’ярня",
+  "entity": "Напій",
+  "name": "drink",
+  "titleLabel": "Назва напою",
+  "fields": {
+   "origin": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Походження зерна або основа"
+   },
+   "volume": {
+    "role": "number",
+    "type": "integer",
+    "required": true,
+    "min": 30,
+    "max": 1000,
+    "label": "Об’єм, мл"
+   },
+   "availableFrom": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "У меню з"
+   },
+   "temperature": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "hot",
+     "cold"
+    ],
+    "labels": {
+     "hot": "Гарячий",
+     "cold": "Холодний"
+    },
+    "label": "Подача"
+   },
+   "lactoseFree": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Без лактози"
+   }
+  }
+ },
+ {
+  "n": 21,
+  "domain": "Бюро знахідок",
+  "entity": "Знахідка",
+  "name": "found",
+  "titleLabel": "Опис знахідки",
+  "fields": {
+   "place": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Де знайдено"
+   },
+   "value": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 0,
+    "max": 1000000,
+    "label": "Орієнтовна вартість, грн"
+   },
+   "foundAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата знахідки"
+   },
+   "category": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "documents",
+     "electronics",
+     "clothes",
+     "other"
+    ],
+    "labels": {
+     "documents": "Документи",
+     "electronics": "Електроніка",
+     "clothes": "Одяг",
+     "other": "Інше"
+    },
+    "label": "Категорія"
+   },
+   "returned": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Повернуто власнику"
+   }
+  }
+ },
+ {
+  "n": 22,
+  "domain": "Магазин відеоігор",
+  "entity": "Відеогра",
+  "name": "game",
+  "titleLabel": "Назва гри",
+  "fields": {
+   "developer": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Розробник"
+   },
+   "price": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 0,
+    "max": 10000,
+    "label": "Ціна, грн"
+   },
+   "releaseDate": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата виходу"
+   },
+   "platform": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "pc",
+     "playstation",
+     "xbox",
+     "switch"
+    ],
+    "labels": {
+     "pc": "ПК",
+     "playstation": "PlayStation",
+     "xbox": "Xbox",
+     "switch": "Switch"
+    },
+    "label": "Платформа"
+   },
+   "multiplayer": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Мережева гра"
+   }
+  }
+ },
+ {
+  "n": 23,
+  "domain": "Музична крамниця",
+  "entity": "Інструмент",
+  "name": "instrument",
+  "titleLabel": "Модель",
+  "fields": {
+   "brand": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Виробник"
+   },
+   "price": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 100,
+    "max": 2000000,
+    "label": "Ціна, грн"
+   },
+   "arrivedAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата надходження"
+   },
+   "kind": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "string",
+     "keyboard",
+     "wind",
+     "percussion"
+    ],
+    "labels": {
+     "string": "Струнний",
+     "keyboard": "Клавішний",
+     "wind": "Духовий",
+     "percussion": "Ударний"
+    },
+    "label": "Тип"
+   },
+   "used": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Вживаний"
+   }
+  }
+ },
+ {
+  "n": 24,
+  "domain": "Клуб настільних ігор",
+  "entity": "Настільна гра",
+  "name": "boardgame",
+  "titleLabel": "Назва гри",
+  "fields": {
+   "publisher": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Видавець"
+   },
+   "maxPlayers": {
+    "role": "number",
+    "type": "integer",
+    "required": true,
+    "min": 1,
+    "max": 30,
+    "label": "Максимум гравців"
+   },
+   "addedAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата додавання"
+   },
+   "difficulty": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "easy",
+     "medium",
+     "hard"
+    ],
+    "labels": {
+     "easy": "Легка",
+     "medium": "Середня",
+     "hard": "Складна"
+    },
+    "label": "Складність"
+   },
+   "available": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Доступна"
+   }
+  }
+ },
+ {
+  "n": 25,
+  "domain": "ІТ-конференція",
+  "entity": "Доповідь",
+  "name": "talk",
+  "titleLabel": "Тема доповіді",
+  "fields": {
+   "speaker": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Доповідач"
+   },
+   "duration": {
+    "role": "number",
+    "type": "integer",
+    "required": true,
+    "min": 5,
+    "max": 240,
+    "label": "Тривалість, хв"
+   },
+   "talkDate": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата виступу"
+   },
+   "track": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "frontend",
+     "backend",
+     "devops",
+     "ai"
+    ],
+    "labels": {
+     "frontend": "Frontend",
+     "backend": "Backend",
+     "devops": "DevOps",
+     "ai": "AI"
+    },
+    "label": "Секція"
+   },
+   "recorded": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Буде запис"
+   }
+  }
+ },
+ {
+  "n": 26,
+  "domain": "Велопрокат",
+  "entity": "Велосипед",
+  "name": "bike",
+  "titleLabel": "Модель",
+  "fields": {
+   "station": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Станція"
+   },
+   "pricePerHour": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 10,
+    "max": 2000,
+    "label": "Ціна за годину, грн"
+   },
+   "serviceDate": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата обслуговування"
+   },
+   "bikeType": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "city",
+     "mountain",
+     "electric",
+     "kids"
+    ],
+    "labels": {
+     "city": "Міський",
+     "mountain": "Гірський",
+     "electric": "Електро",
+     "kids": "Дитячий"
+    },
+    "label": "Тип"
+   },
+   "helmet": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Шолом включено"
+   }
+  }
+ },
+ {
+  "n": 27,
+  "domain": "Служба доставки",
+  "entity": "Відправлення",
+  "name": "parcel",
+  "titleLabel": "Опис вантажу",
+  "fields": {
+   "city": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Місто отримувача"
+   },
+   "weight": {
+    "role": "number",
+    "type": "number",
+    "required": true,
+    "min": 0.1,
+    "max": 1000,
+    "label": "Вага, кг"
+   },
+   "sentAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата відправлення"
+   },
+   "delivery": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "branch",
+     "courier",
+     "locker"
+    ],
+    "labels": {
+     "branch": "У відділення",
+     "courier": "Кур’єром",
+     "locker": "У поштомат"
+    },
+    "label": "Доставка"
+   },
+   "insured": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Застраховано"
+   }
+  }
+ },
+ {
+  "n": 28,
+  "domain": "Волонтерський центр",
+  "entity": "Запит допомоги",
+  "name": "request",
+  "titleLabel": "Що потрібно",
+  "fields": {
+   "city": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Місто"
+   },
+   "quantity": {
+    "role": "number",
+    "type": "integer",
+    "required": true,
+    "min": 1,
+    "max": 100000,
+    "label": "Кількість"
+   },
+   "deadline": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Потрібно до"
+   },
+   "category": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "food",
+     "medicine",
+     "equipment",
+     "clothes"
+    ],
+    "labels": {
+     "food": "Продукти",
+     "medicine": "Медикаменти",
+     "equipment": "Обладнання",
+     "clothes": "Одяг"
+    },
+    "label": "Категорія"
+   },
+   "urgent": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Терміново"
+   }
+  }
+ },
+ {
+  "n": 29,
+  "domain": "Розумний дім",
+  "entity": "Пристрій",
+  "name": "device",
+  "titleLabel": "Назва пристрою",
+  "fields": {
+   "room": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Кімната"
+   },
+   "power": {
+    "role": "number",
+    "type": "integer",
+    "required": true,
+    "min": 1,
+    "max": 10000,
+    "label": "Потужність, Вт"
+   },
+   "installedAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата встановлення"
+   },
+   "deviceType": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "sensor",
+     "switch",
+     "camera",
+     "thermostat"
+    ],
+    "labels": {
+     "sensor": "Давач",
+     "switch": "Вимикач",
+     "camera": "Камера",
+     "thermostat": "Термостат"
+    },
+    "label": "Тип"
+   },
+   "online": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "У мережі"
+   }
+  }
+ },
+ {
+  "n": 30,
+  "domain": "Подкаст-платформа",
+  "entity": "Епізод",
+  "name": "episode",
+  "titleLabel": "Назва епізоду",
+  "fields": {
+   "host": {
+    "role": "text",
+    "type": "string",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 80,
+    "label": "Ведучий"
+   },
+   "duration": {
+    "role": "number",
+    "type": "integer",
+    "required": true,
+    "min": 1,
+    "max": 600,
+    "label": "Тривалість, хв"
+   },
+   "publishedAt": {
+    "role": "date",
+    "type": "date",
+    "required": true,
+    "label": "Дата публікації"
+   },
+   "topic": {
+    "role": "enum",
+    "type": "string",
+    "required": true,
+    "enum": [
+     "tech",
+     "science",
+     "culture",
+     "sport"
+    ],
+    "labels": {
+     "tech": "Технології",
+     "science": "Наука",
+     "culture": "Культура",
+     "sport": "Спорт"
+    },
+    "label": "Тема"
+   },
+   "explicit": {
+    "role": "bool",
+    "type": "boolean",
+    "required": true,
+    "label": "Для дорослих"
+   }
+  }
+ }
+]

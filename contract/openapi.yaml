@@ -1,0 +1,304 @@
+openapi: 3.1.0
+info:
+  title: WP Catalog API
+  version: 1.0.0
+  description: |
+    Спільний контракт API каталогу для практичних завдань курсу «Веб-програмування».
+    Ресурс `/api/items` універсальний: обов’язкові поля `id`, `title`, `createdAt`, `updatedAt`
+    є в усіх варіантах, решту полів визначає предметна область студента (файл `entity.json`).
+    Схема `Book` – приклад для демонстраційного варіанту «Бібліотека».
+    З ПЗ 5 операції зміни вимагають автентифікації: токен JWT (Authorization: Bearer) для людей
+    або ключ пристрою (X-API-Key) для плат і симуляторів; читання каталогу відкрите.
+servers:
+  - url: http://localhost:3000
+paths:
+  /api/health:
+    get:
+      summary: Перевірка доступності сервера
+      operationId: health
+      responses:
+        "200":
+          description: Сервер працює
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: { type: string, const: ok }
+  /api/auth/register:
+    post:
+      summary: Реєстрація користувача (роль user)
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Credentials" }
+      responses:
+        "201":
+          description: Користувача створено (без хешу пароля)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/auth/login:
+    post:
+      summary: Вхід і отримання токена доступу
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Credentials" }
+      responses:
+        "200":
+          description: Токен JWT (строк дії – expiresIn секунд)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token, tokenType, expiresIn, user]
+                properties:
+                  token: { type: string }
+                  tokenType: { type: string, const: Bearer }
+                  expiresIn: { type: integer }
+                  user: { $ref: "#/components/schemas/User" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/auth/me:
+    get:
+      summary: Поточний користувач
+      operationId: me
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Користувач за токеном
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/keys:
+    post:
+      summary: Створити ключ пристрою (лише адміністратор); ключ показується один раз
+      operationId: createApiKey
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, minLength: 1, maxLength: 100 }
+      responses:
+        "201":
+          description: Ключ створено
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, name, key]
+                properties:
+                  id: { type: integer }
+                  name: { type: string }
+                  key: { type: string, description: "Значення для заголовка X-API-Key" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/items:
+    get:
+      summary: Список записів з пошуком, фільтрацією, сортуванням і пагінацією
+      operationId: listItems
+      parameters:
+        - { name: q, in: query, description: "Пошук підрядка (без урахування регістру) у полі title і в полях з позначкою search: true в описі сутності", schema: { type: string } }
+        - { name: page, in: query, description: Номер сторінки; більший за кількість сторінок замінюється останньою, schema: { type: integer, minimum: 1, default: 1 } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 10 } }
+        - { name: sort, in: query, description: Назва поля для сортування, schema: { type: string, default: id } }
+        - { name: order, in: query, schema: { type: string, enum: [asc, desc], default: asc } }
+      x-filters: >
+        Будь-який інший параметр запиту з назвою поля сутності – фільтр на рівність,
+        наприклад `?genre=fantasy&available=true`. Невідоме поле або значення неправильного типу – 400.
+      responses:
+        "200":
+          description: Сторінка записів
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ItemPage" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+    post:
+      summary: Створити запис (ролі user, admin; пристрій з ключем)
+      operationId: createItem
+      security: [{ bearerAuth: [] }, { apiKey: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ItemInput" }
+      responses:
+        "201":
+          description: Запис створено
+          headers:
+            Location: { description: Адреса нового запису, schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Item" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/items/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer, minimum: 1 } }
+    get:
+      summary: Отримати запис
+      operationId: getItem
+      responses:
+        "200":
+          description: Запис
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Item" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      summary: Замінити запис повністю (ролі user, admin)
+      operationId: replaceItem
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ItemInput" }
+      responses:
+        "200":
+          description: Оновлений запис
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Item" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+    delete:
+      summary: Видалити запис (лише admin)
+      operationId: deleteItem
+      security: [{ bearerAuth: [] }]
+      responses:
+        "204": { description: Запис видалено }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+    apiKey: { type: apiKey, in: header, name: X-API-Key }
+  schemas:
+    Credentials:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, minLength: 8, writeOnly: true }
+    User:
+      type: object
+      required: [id, email, role]
+      properties:
+        id: { type: integer }
+        email: { type: string, format: email }
+        role: { type: string, enum: [user, admin] }
+    ItemInput:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200 }
+      additionalProperties: true
+    Item:
+      allOf:
+        - $ref: "#/components/schemas/ItemInput"
+        - type: object
+          required: [id, createdAt, updatedAt]
+          properties:
+            id: { type: integer, minimum: 1, readOnly: true }
+            createdAt: { type: string, format: date-time, readOnly: true }
+            updatedAt: { type: string, format: date-time, readOnly: true }
+    ItemPage:
+      type: object
+      required: [items, total, page, limit]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/Item" } }
+        total: { type: integer, minimum: 0, description: Кількість записів, що відповідають запиту (без пагінації) }
+        page: { type: integer, minimum: 1 }
+        limit: { type: integer, minimum: 1 }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string, examples: [VALIDATION_ERROR, NOT_FOUND] }
+            message: { type: string }
+            details:
+              type: array
+              items:
+                type: object
+                required: [field, message]
+                properties:
+                  field: { type: string }
+                  message: { type: string }
+    Book:
+      description: Сутність демонстраційного варіанту «Бібліотека»
+      allOf:
+        - $ref: "#/components/schemas/Item"
+        - type: object
+          required: [author, year, isbn, genre, price, available, receivedAt]
+          properties:
+            author: { type: string, minLength: 1, maxLength: 100 }
+            year: { type: integer, minimum: 1450 }
+            isbn: { type: string, pattern: "^97[89][0-9]{10}$", description: ISBN-13 без дефісів }
+            genre: { type: string, enum: [fiction, fantasy, science, history, children, poetry] }
+            price: { type: number, minimum: 0, description: Вартість примірника, грн }
+            available: { type: boolean }
+            receivedAt: { type: string, format: date, description: Дата надходження до бібліотеки }
+  responses:
+    BadRequest:
+      description: Помилка валідації
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example:
+            error:
+              code: VALIDATION_ERROR
+              message: Дані не пройшли перевірку
+              details: [{ field: year, message: Рік має бути цілим числом від 1450 до поточного }]
+    Conflict:
+      description: Запит суперечить наявним даним (індивідуальні правила № 1 і № 8, з ПЗ 4)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          example:
+            error: { code: CONFLICT, message: Запис з такою назвою вже існує, details: [{ field: title, message: Назва має бути унікальною }] }
+    Unauthorized:
+      description: Немає, недійсний або прострочений токен чи ключ (заголовок WWW-Authenticate Bearer)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Forbidden:
+      description: Автентифіковано, але недостатньо прав
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    TooManyRequests:
+      description: Забагато невдалих спроб входу (заголовок Retry-After, с)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    NotFound:
+      description: Запис не знайдено
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }

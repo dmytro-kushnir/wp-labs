@@ -1,0 +1,56 @@
+{
+  "name": "book",
+  "title": "Книга",
+  "fields": {
+    "author": {
+      "type": "string",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 100,
+      "label": "Автор",
+      "search": true
+    },
+    "year": {
+      "type": "integer",
+      "required": true,
+      "min": 1450,
+      "max": "currentYear",
+      "label": "Рік видання"
+    },
+    "isbn": {
+      "type": "string",
+      "required": true,
+      "pattern": "^97[89][0-9]{10}$",
+      "label": "ISBN-13"
+    },
+    "genre": {
+      "type": "string",
+      "required": true,
+      "enum": [
+        "fiction",
+        "fantasy",
+        "science",
+        "history",
+        "children",
+        "poetry"
+      ],
+      "label": "Жанр"
+    },
+    "price": {
+      "type": "number",
+      "required": true,
+      "min": 0,
+      "label": "Вартість, грн"
+    },
+    "available": {
+      "type": "boolean",
+      "required": true,
+      "label": "Доступна"
+    },
+    "receivedAt": {
+      "type": "date",
+      "required": true,
+      "label": "Дата надходження"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+WP IoT node: esp32-wokwi-1
+{"title": "esp32-wokwi-1 #1 temperature", "device": "esp32-wokwi-1", "quantity": "temperature", "value": 23.5, "normal": true}
+{"title": "esp32-wokwi-1 #1 humidity", "device": "esp32-wokwi-1", "quantity": "humidity", "value": 45.0, "normal": true}
+ERR: [Errno 110] ETIMEDOUT
+{"title": "esp32-wokwi-1 #2 temperature", "device": "esp32-wokwi-1", "quantity": "temperature", "value": 27.1, "normal": false}

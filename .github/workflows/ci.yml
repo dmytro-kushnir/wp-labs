@@ -1,0 +1,25 @@
+# Безперервна інтеграція: перевірки запускаються на кожен push у будь-яку гілку і на кожен pull request.
+# Розкоментовуйте кроки в міру виконання практичних завдань.
+name: CI
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test                              # ПЗ 1
+      # - run: npm run typecheck                   # ПЗ 3 (з ПЗ 6 – разом із клієнтом React)
+      # - run: npm run contract                    # ПЗ 4: контрактні тести власного сервера
+      # - run: npm run contract -- --auth          # ПЗ 5: замість попереднього кроку
+      # - run: npm run build                       # ПЗ 6: збирання клієнта React
+      # - run: docker build --target api .         # ПЗ 6: образ сервера
+      # перевірки репозиторію курсу (у репозиторіях студентів пропускаються)
+      - if: github.repository == 'dmytro-kushnir/wp-labs'
+        run: npm run check
+      - if: github.repository == 'dmytro-kushnir/wp-labs'
+        run: docker build --target web --build-arg APP=demo .

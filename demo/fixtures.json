@@ -1,0 +1,73 @@
+{
+  "valid": {
+    "title": "Інтернат",
+    "author": "Сергій Жадан",
+    "year": 2017,
+    "isbn": "9786171263017",
+    "genre": "fiction",
+    "price": 300,
+    "available": true,
+    "receivedAt": "2026-03-02"
+  },
+  "update": {
+    "title": "Інтернат",
+    "author": "Сергій Жадан",
+    "year": 2017,
+    "isbn": "9786171263017",
+    "genre": "fiction",
+    "price": 350,
+    "available": false,
+    "receivedAt": "2026-03-02"
+  },
+  "invalid": {
+    "body": {
+      "title": "",
+      "author": "Тест",
+      "year": 3000,
+      "isbn": "123",
+      "genre": "horror",
+      "price": -1,
+      "available": "так",
+      "receivedAt": "2027-02-30"
+    },
+    "fields": [
+      "title",
+      "year",
+      "isbn",
+      "genre",
+      "price",
+      "available",
+      "receivedAt"
+    ]
+  },
+  "filter": {
+    "field": "genre",
+    "value": "poetry"
+  },
+  "rule": {
+    "description": "Правило № 1 (PETRENKO): назва унікальна без урахування регістру",
+    "setup": [
+      {
+        "title": "Місто",
+        "author": "Валер’ян Підмогильний",
+        "year": 1928,
+        "isbn": "9789660368378",
+        "genre": "fiction",
+        "price": 280,
+        "available": true,
+        "receivedAt": "2025-09-01"
+      }
+    ],
+    "violation": {
+      "title": "  МІСТО ",
+      "author": "Інший автор",
+      "year": 1990,
+      "isbn": "9789660370906",
+      "genre": "fiction",
+      "price": 100,
+      "available": true,
+      "receivedAt": "2025-09-02"
+    },
+    "status": 409
+  }
+}

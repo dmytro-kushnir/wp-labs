@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "strict": true,
+    "target": "ES2024",
+    "lib": ["ES2024", "ESNext.Collection", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "types": []
+  },
+  "include": ["src/**/*.js"], "exclude": ["server"]
+}
